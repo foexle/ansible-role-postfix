@@ -38,6 +38,23 @@
     - common
     - postfix
 
+- name: Add Amazon specific vars
+  include_vars: "{{ ansible_distribution }}.yml"
+  when: ansible_distribution == 'Amazon'
+  tags:
+    - common
+    - postfix
+
+- name: Install packages for Amazon Linux
+  yum: >
+    name={{ item }}
+    state=latest
+  with_items: postfix_packages
+  when: ansible_distribution == 'Amazon'
+  tags:
+    - common
+    - postfix
+
 - name: Write SMTP authentication template
   template: >
     src=sasl_passwd.j2

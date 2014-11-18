@@ -4,7 +4,7 @@ This role configures [Postfix](http://www.postfix.org/) which is a free and open
 
 ## Requirements
 
-This role requires [Ansible](http://www.ansibleworks.com/) version 1.4 or higher and the Debian/Ubuntu platform.
+This role requires [Ansible](http://www.ansibleworks.com/) version 1.4 or higher and works with Debian/Ubuntu, Centos and Amazon Linux.
 
 ## Role Variables
 
