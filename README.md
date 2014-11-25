@@ -21,6 +21,9 @@ postfix_notify_email: false
 # The next-hop destination of non-local mail, for SMTP define a FQDN or hostname
 postfix_relayhost: ''
 
+# The default falg for whether to enable SMTP daemon TLS (receiving)
+postfix_use_smtpd_tls: false
+
 # The default flag for whether to enable SMTP sending
 postfix_use_smtp: false
 

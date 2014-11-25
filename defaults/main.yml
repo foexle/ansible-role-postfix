@@ -5,6 +5,7 @@
 postfix_domain: ''
 postfix_notify_email: false
 postfix_relayhost: ''
+postfix_use_smtpd_tls: false
 postfix_use_smtp: false
 postfix_relayhost_user: false
 postfix_relayhost_pass: false
