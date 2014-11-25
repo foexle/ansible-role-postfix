@@ -38,19 +38,12 @@
     - common
     - postfix
 
-- name: Add Amazon specific vars
-  include_vars: "{{ ansible_distribution }}.yml"
-  when: ansible_distribution == 'Amazon'
-  tags:
-    - common
-    - postfix
-
-- name: Install packages for Amazon Linux
+- name: Install packages for Redhat / Centos / Amazon Linux
   yum: >
     name={{ item }}
     state=latest
   with_items: postfix_packages
-  when: ansible_distribution == 'Amazon'
+  when: ansible_os_family == 'RedHat'
   tags:
     - common
     - postfix

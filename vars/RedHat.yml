@@ -1,6 +1,7 @@
 ---
+# Defines variables for RedHat/Centos/Amazon and derivatives
 
 postfix_config_dir: '/etc/postfix'
 postfix_service: 'postfix'
-# Postfix included in default build, no deps
-postfix_packages: ''
+postfix_packages:
+  - 'postfix'
