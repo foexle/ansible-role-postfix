@@ -19,9 +19,7 @@
     - postfix
 
 - name: Pre-seed Postfix configuration
-  command: >
-    /usr/bin/debconf-set-selections /tmp/postfix_selections
-    executable=/bin/bash
+  shell: "/usr/bin/debconf-set-selections /tmp/postfix_selections"
   when: preseed_template|changed
   tags:
     - common
