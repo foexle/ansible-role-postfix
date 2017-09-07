@@ -27,10 +27,10 @@
 
 - name: Install packages for Debian derivatives
   apt: >
-    pkg={{ item }}
+    pkg="{{ item }}"
     update_cache=yes
     state=latest
-  with_items: postfix_packages
+  with_items: "{{ postfix_packages }}"
   when: ansible_os_family == 'Debian'
   tags:
     - common
@@ -39,7 +39,7 @@
 - name: Write SMTP authentication template
   template: >
     src=sasl_passwd.j2
-    dest={{ postfix_config_dir }}/sasl_passwd
+    dest="{{ postfix_config_dir }}/sasl_passwd"
     mode=0600 owner=root group=root
   notify:
     - postmap sasl
@@ -51,7 +51,7 @@
 - name: Write Postfix configuration template
   template: >
     src=main-cf.j2
-    dest={{ postfix_config_dir }}/main.cf
+    dest="{{ postfix_config_dir }}/main.cf"
     mode=0644 owner=root group=root
     backup=yes
   notify:
@@ -73,7 +73,7 @@
 
 - name: Start Postfix on server boot
   service: >
-    name={{ postfix_service }}
+    name="{{ postfix_service }}"
     state=started
     enabled=yes
   tags:
