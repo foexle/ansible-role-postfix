@@ -39,6 +39,7 @@ postfix_inet_protocols: 'all'
 # The address type ("ipv6", "ipv4" or "any") that the Postfix SMTP client will try first, when a destination has IPv6 and IPv4 addresses with equal MX preference.
 postfix_smtp_address_preference: 'all'
 ```
+Please take a look into defaults/main.yml for further informations and other parameters.
 
 ## Examples
 
