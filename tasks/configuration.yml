@@ -1,0 +1,51 @@
+---
+- name: Write SMTP authentication template
+  template: >
+    src=sasl_passwd.j2
+    dest="{{ postfix_config_dir }}/sasl_passwd"
+    mode=0600 owner=root group=root
+  notify:
+    - postmap sasl
+  when: postfix_use_smtp and postfix_relayhost_user and postfix_relayhost_pass
+  tags:
+    - common
+    - postfix
+
+
+- name: Write SMTP authentication template
+  template: >
+    src=sasl_passwd.j2
+    dest="{{ postfix_config_dir }}/sasl_passwd"
+    mode=0600 owner=root group=root
+  notify:
+    - postmap sasl
+  when: postfix_use_smtp and postfix_relayhost_user and postfix_relayhost_pass
+  tags:
+    - common
+    - postfix
+
+
+- name: Write Postfix configuration template
+  template: >
+    src=main-cf.j2
+    dest="{{ postfix_config_dir }}/main.cf"
+    mode=0644 owner=root group=root
+    backup=yes
+  notify:
+    - restart postfix
+    - send test email
+  tags:
+    - common
+    - postfix
+
+
+- name: Configure root user email forwarding
+  template: >
+    src=root-forward.j2
+    dest=/root/.forward
+    mode=0644 owner=root group=root
+  when: postfix_notify_email is defined
+  tags:
+    - common
+    - postfix
+

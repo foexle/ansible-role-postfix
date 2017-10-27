@@ -17,21 +17,24 @@ append_dot_mydomain = no
 readme_directory = no
 
 # TLS parameters
+{% if postfix_smtpd_tls_enable is defined and postfix_smtpd_tls_enable %}
+smtpd_use_tls=yes
 smtpd_tls_cert_file={{ postfix_smtpd_tls_cert_file }}
 smtpd_tls_key_file={{ postfix_smtpd_tls_key_file }}
-smtpd_use_tls={{ postfix_smtpd_tls_enable }}
 smtpd_tls_CAfile={{ postfix_smtpd_tls_ca_file }}
 smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
 smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+{% endif %}
 
-{% if postfix_use_smtp is defined and postfix_use_smtp == true %}
+{% if postfix_use_smtp is defined and postfix_use_smtp %}
 # Enable SASL authentication
 smtp_sasl_auth_enable = yes
 smtp_sasl_password_maps = hash:/etc/postfix/sasl_passwd
 smtp_sasl_security_options = noanonymous
 smtp_use_tls = yes
-
 {% endif %}
+
+
 # General
 myorigin = {{ postfix_origin }}
 myhostname = {{ ansible_hostname }}
@@ -42,12 +45,14 @@ relayhost = {{ postfix_relayhost }}
 mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
 mailbox_size_limit = 0
 recipient_delimiter = +
-inet_interfaces = {{postfix_inet_interfaces}}
-inet_protocols = {{postfix_inet_protocols}}
-smtp_address_preference = {{postfix_smtp_address_preference}}
+inet_interfaces = {{ postfix_inet_interfaces }}
+inet_protocols = {{ postfix_inet_protocols }}
+smtp_address_preference = {{ postfix_smtp_address_preference }}
 message_size_limit = {{ postfix_message_size_limit }}
 
-{% if postfix_use_virtual_user is defined and postfix_use_virtual_user == true %}
+
+{% if postfix_use_virtual_user is defined and postfix_use_virtual_user %}
+# Virtual User config
 virtual_mailbox_domains = {{ postfix_vuser_db_type }}:{{ postfix_vuser_db_file_domains }}
 virtual_mailbox_maps = {{ postfix_vuser_db_type }}:{{ postfix_vuser_db_file_maps }}
 virtual_alias_maps = {{ postfix_vuser_db_type }}:{{ postfix_vuser_db_file_alias_maps }}
@@ -56,10 +61,12 @@ procmail_destination_recipient_limit = 1
 virtual_uid_maps = {{ postfix_vuser_uid_maps }}
 virtual_gid_maps = {{ postfix_vuser_gid_maps }}
 {% endif %}
+
 {% if postfix_vuser_transport is defined and postfix_vuser_transport == 'procmail' %}
 procmail_destination_recipient_limit = 1
 {% endif %}
-{% if postfix_sasl_auth_enable is defined and postfix_sasl_auth_enable == 'true' %}
+
+{% if postfix_sasl_auth_enable is defined and postfix_sasl_auth_enable %}
 smtpd_sasl_auth_enable = yes
 smtpd_sasl_type = {{ postfix_sasl_auth_type }}
 smtpd_sasl_path = {{ postfix_sasl_auth_path }}

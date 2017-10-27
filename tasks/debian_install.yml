@@ -1,0 +1,28 @@
+---
+- name: Create pre-seed values for Postfix configuration
+  template: >
+    src=tmp-postfix_selections.j2
+    dest=/tmp/postfix_selections
+    mode=0644 owner=root group=root
+  register: preseed_template
+  tags:
+    - common
+    - postfix
+
+- name: Pre-seed Postfix configuration
+  shell: "/usr/bin/debconf-set-selections /tmp/postfix_selections"
+  when: preseed_template|changed
+  tags:
+    - common
+    - postfix
+
+- name: Install packages for Debian derivatives
+  apt: >
+    pkg="{{ item }}"
+    update_cache=yes
+    state=latest
+  with_items: "{{ postfix_packages }}"
+  tags:
+    - common
+    - postfix
+

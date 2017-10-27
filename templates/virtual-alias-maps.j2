@@ -1,0 +1,5 @@
+user = {{ postfix_vuser_db_username }}
+password = {{ postfix_vuser_db_password }}
+hosts = {{ postfix_vuser_db_host }}
+dbname = {{ postfix_vuser_db_name }}
+query = SELECT destination from virtual_aliases where source='%s'

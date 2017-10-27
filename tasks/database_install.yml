@@ -1,0 +1,58 @@
+---
+- name: Install MySQL packages
+  apt: pkg="{{ item }}" update_cache=yes state=latest
+  with_items: "{{ postfix_packages_mysql }}"
+  when: postfix_vuser_db_type == 'mysql'
+
+- name: Install Postgres packages
+  apt: pkg:"{{ item }}" update_cache=yes state=latest
+  with_items: "{{ postfix_packages_postgres }}"
+  when: postfix_vuser_db_type == 'postgres'
+
+- name: Write database virtual mailbox domains
+  template: >
+    src=virtual-mailbox-domains.j2
+    dest="{{ postfix_config_dir }}/virtual-mailbox-domains.cf"
+    mode=0600 owner=root group=root
+  notify:
+    - restart postfix
+ 
+- name: Write database virtual alias maps
+  template: >
+    src=virtual-alias-maps.j2
+    dest="{{ postfix_config_dir }}/virtual-alias-maps.cf"
+    mode=0600 owner=root group=root 
+  notify:
+    - restart postfix
+
+- name: Write database virtual mailbox maps
+  template: >
+    src=virtual-mailbox-maps.j2
+    dest="{{ postfix_config_dir }}/virtual-mailbox-maps.cf"
+    mode=0600 owner=root group=root 
+  notify:
+    - restart postfix
+
+- name: Copy database schema file to create tables and columns
+  copy: 
+    src: files/mailbox.sql
+    dest: "{{ postfix_config_dir }}/mailbox-schema.sql"
+    owner: postfix
+    group: postfix
+    mode: 0644
+
+- name: Validating if MySQL database schema exists 
+  shell: |
+     mysql --login-path=local -e 'SHOW tables' {{ postfix_vuser_db_name }} | grep virtual
+  args:
+    executable: /bin/bash
+  register: dbstatus
+  ignore_errors: True
+  when: postfix_vuser_db_type == 'mysql'
+
+- name: Creating initial MySQL database schema 
+  shell: | 
+    mysql -u "{{ postfix_vuser_db_username }}" -p"{{ postfix_vuser_db_password }}" "{{ postfix_vuser_db_name }}" < "{{ postfix_config_dir }}/mailbox-schema.sql"
+  args:
+    executable: /bin/bash
+  when: dbstatus.rc == 1 and postfix_vuser_db_type == 'mysql'

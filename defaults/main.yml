@@ -14,22 +14,32 @@ postfix_inet_protocols: 'all'
 postfix_smtp_address_preference: 'all'
 postfix_message_size_limit: '158480000'
 
+postfix_smtpd_tls_enable: true
+postfix_smtpd_tls_cert_file: '/etc/ssl/certs/ssl-cert-snakeoil.pem'
+postfix_smtpd_tls_key_file: '/etc/ssl/private/ssl-cert-snakeoil.key'
+postfix_smtpd_tls_ca_file: ''
+
+
 # Virtuall user configurations
 # This configuration can be used for store and configure mail users/passwords in a relational database
-postfix_use_virtual_user: 'false'
+postfix_use_virtual_user: false
 postfix_vuser_system_user: 'vmail'
 postfix_vuser_system_group: 'vmail'
 postfix_vuser_db_type: 'mysql'
-postfix_vuser_db_file_maps: '/etc/postfix/mysql-virtual-mailbox-maps.cf'
-postfix_vuser_db_file_domains: '/etc/postfix/mysql-virtual-mailbox-domains.cf'
-postfix_vuser_db_file_alias_maps: '/etc/postfix/mysql-virtual-alias-maps.cf'
+postfix_vuser_db_host: '127.0.0.1'
+postfix_vuser_db_name: 'mailbox'
+postfix_vuser_db_username: 'mailbox'
+postfix_vuser_db_password: 'mailbox'
+postfix_vuser_db_file_maps: '/etc/postfix/virtual-mailbox-maps.cf'
+postfix_vuser_db_file_domains: '/etc/postfix/virtual-mailbox-domains.cf'
+postfix_vuser_db_file_alias_maps: '/etc/postfix/virtual-alias-maps.cf'
 postfix_vuser_transport: 'procmail'
 postfix_vuser_uid_maps: 'static:{{ postfix_vuser_system_user }}'
-postfix_vuser_uid_maps: 'static:{{ postfix_vuser_system_group }}'
+postfix_vuser_gid_maps: 'static:{{ postfix_vuser_system_group }}'
 
 
 # SMTP daemon settings
-postfix_sasl_auth_enable: 'false'
+postfix_sasl_auth_enable: false
 postfix_sasl_auth_type: 'dovecot'
 postfix_sasl_auth_path: 'private/auth'
 

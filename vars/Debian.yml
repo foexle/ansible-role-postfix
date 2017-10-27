@@ -10,3 +10,7 @@ postfix_packages:
   - 'libsasl2-modules'
   - 'mailutils'
   - 'postfix'
+
+postfix_packages_mysql:
+  - 'postfix-mysql'
+  - 'mysql-client'
