@@ -12,3 +12,38 @@ postfix_relayhost_pass: false
 postfix_inet_interfaces: 'loopback-only'
 postfix_inet_protocols: 'all'
 postfix_smtp_address_preference: 'all'
+postfix_message_size_limit: '158480000'
+
+# Virtuall user configurations
+# This configuration can be used for store and configure mail users/passwords in a relational database
+postfix_use_virtual_user: 'false'
+postfix_vuser_system_user: 'vmail'
+postfix_vuser_system_group: 'vmail'
+postfix_vuser_db_type: 'mysql'
+postfix_vuser_db_file_maps: '/etc/postfix/mysql-virtual-mailbox-maps.cf'
+postfix_vuser_db_file_domains: '/etc/postfix/mysql-virtual-mailbox-domains.cf'
+postfix_vuser_db_file_alias_maps: '/etc/postfix/mysql-virtual-alias-maps.cf'
+postfix_vuser_transport: 'procmail'
+postfix_vuser_uid_maps: 'static:{{ postfix_vuser_system_user }}'
+postfix_vuser_uid_maps: 'static:{{ postfix_vuser_system_group }}'
+
+
+# SMTP daemon settings
+postfix_sasl_auth_enable: 'false'
+postfix_sasl_auth_type: 'dovecot'
+postfix_sasl_auth_path: 'private/auth'
+
+# Requirements for the HELO statement
+postfix_smtpd_halo_restrictions: 'permit_mynetworks, warn_if_reject reject_non_fqdn_hostname, reject_invalid_hostname, permit'
+
+# Requirements for the sender details. Note that the order matters.
+# E.g. see http://jimsun.linxnet.com/misc/restriction_order_prelim-03.txt
+postfix_smtpd_sender_restrictions: 'permit_mynetworks, permit_sasl_authenticated, warn_if_reject, reject_non_fqdn_sender, reject_unknown_sender_domain, reject_unauth_destination'
+
+# Requirements for the connecting server
+postfix_smtpd_client_restrictions: 'reject_rbl_client sbl.spamhaus.org, reject_rbl_client blackholes.easynet.nl'
+
+# Requirement for the recipient address. Note that the entry for
+# "check_policy_service inet:127.0.0.1:10023" enables Postgrey.
+postfix_smtpd_recipient_restrictions: 'permit_mynetworks, permit_sasl_authenticated, reject_non_fqdn_recipient, reject_unknown_recipient_domain, reject_unauth_destination, reject_unauth_pipelining, reject_rbl_client zen.spamhaus.org, reject_rbl_client bl.spamcop.net, permit'
+postfix_smtpd_data_restrictions: 'reject_unauth_pipelining'
