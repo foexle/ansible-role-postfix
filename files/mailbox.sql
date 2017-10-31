@@ -128,7 +128,7 @@ CREATE TABLE `virtual_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `domain_id` int(11) NOT NULL,
   `user` varchar(40) NOT NULL,
-  `password` varchar(32) NOT NULL,
+  `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `UNIQUE_EMAIL` (`domain_id`,`user`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
