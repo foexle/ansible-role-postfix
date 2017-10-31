@@ -3,6 +3,7 @@
 # If not overriden in inventory or as a parameter, this is the value that will be used
 
 postfix_origin: '{{ ansible_hostname }}'
+postfix_master_cf_path: '{{ postfix_config_dir }}/master.cf'
 postfix_domain: ''
 postfix_notify_email: false
 postfix_relayhost: ''
@@ -30,9 +31,9 @@ postfix_vuser_db_host: '127.0.0.1'
 postfix_vuser_db_name: 'mailbox'
 postfix_vuser_db_username: 'mailbox'
 postfix_vuser_db_password: 'mailbox'
-postfix_vuser_db_file_maps: '/etc/postfix/virtual-mailbox-maps.cf'
-postfix_vuser_db_file_domains: '/etc/postfix/virtual-mailbox-domains.cf'
-postfix_vuser_db_file_alias_maps: '/etc/postfix/virtual-alias-maps.cf'
+postfix_vuser_db_file_maps: '{{ postfix_config_dir }}/virtual-mailbox-maps.cf'
+postfix_vuser_db_file_domains: '{{ postfix_config_dir }}/virtual-mailbox-domains.cf'
+postfix_vuser_db_file_alias_maps: '{{ postfix_config_dir }}/virtual-alias-maps.cf'
 postfix_vuser_transport: 'procmail'
 postfix_vuser_uid_maps: 'static:{{ postfix_vuser_system_user }}'
 postfix_vuser_gid_maps: 'static:{{ postfix_vuser_system_group }}'

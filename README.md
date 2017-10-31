@@ -1,6 +1,9 @@
 # Postfix Role for Ansible
 
 This role configures [Postfix](http://www.postfix.org/) which is a free and open-source mail transfer agent (MTA) that routes and delivers electronic mail, intended as an alternative to the widely used Sendmail MTA.
+It's possible to use proper SSL certificates by an authenticated SSL provider.
+
+
 
 ## Requirements
 
