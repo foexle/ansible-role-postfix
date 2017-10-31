@@ -33,6 +33,13 @@
   notify:
     - restart postfix
 
+- name: Prepare simply python script to manage users
+  template: >
+    src=create_mailbox_user.py.j2
+    dest="{{ postfix_config_dir }}/create_mailbox_user.py"
+    mode=0600 owner=root group=root
+
+
 - name: Copy database schema file to create tables and columns
   copy: 
     src: files/mailbox.sql
@@ -55,4 +62,4 @@
     mysql -u "{{ postfix_vuser_db_username }}" -p"{{ postfix_vuser_db_password }}" "{{ postfix_vuser_db_name }}" < "{{ postfix_config_dir }}/mailbox-schema.sql"
   args:
     executable: /bin/bash
-  when: dbstatus.rc == 1 and postfix_vuser_db_type == 'mysql'
+  when: dbstatus.rc > 0 and postfix_vuser_db_type == 'mysql'

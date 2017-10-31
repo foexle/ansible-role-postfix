@@ -1,0 +1,63 @@
+#!/usr/bin/env python
+#
+# Python script to create mailbox login users with SSHA512 encryption
+# 
+# Author: Heiko Krämer
+#
+# Dependencies: 
+#	- packages: python-passlib
+#	- version: Python version 3.3+
+
+
+
+import MySQLdb as client
+import crypt
+from optparse import OptionParser
+
+def encrypt_password(password):
+    return crypt.crypt(password, crypt.mksalt(crypt.METHOD_SHA512))
+
+
+def get_connection():
+    return client.connect(host= "{{ postfix_vuser_db_host }}",
+                  user="{{ postfix_vuser_db_username }}",
+                  passwd="{{ postfix_vuser_db_password }}",
+                  db="{{ postfix_vuser_db_name }}")
+  
+def insert_user(username, password, domain):
+    conn= get_connection()
+    cc = conn.cursor()
+
+    try:
+        print("Insert domain ...")
+        cc.execute("INSERT INTO virtual_domains VALUES (NULL,'{0}')".format(domain))
+        conn.commit()
+        domain_id = cc.lastrowid
+        print("Insert user/password ...")
+        cc.execute("INSERT INTO virtual_users VALUES (NULL,'{0}','{1}','{2}')".format(domain_id,username,password))
+        conn.commit()
+    except client.Error as e:
+        print("Unexpected error: ({0])", (e))
+        conn.rollback()
+
+    conn.close()
+
+def main():
+    parser = OptionParser()
+    parser.add_option("-u", "--user", dest="username",
+                  help="This should contain the username")
+    parser.add_option("-d", "--domain", dest="domain",
+                  help="The appropriate domain")
+    parser.add_option("-p", "--password", dest="password",
+                  help="The used password")
+
+
+    (options, args) = parser.parse_args()
+
+    enc_password = encrypt_password(options.password)
+    insert_user(options.username, enc_password, options.domain)
+
+
+
+if __name__ == "__main__":
+    main()
