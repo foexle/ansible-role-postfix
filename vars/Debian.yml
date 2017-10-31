@@ -14,3 +14,4 @@ postfix_packages:
 postfix_packages_mysql:
   - 'postfix-mysql'
   - 'mysql-client'
+  - 'python3-mysqldb'
