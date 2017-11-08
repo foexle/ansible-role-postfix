@@ -155,6 +155,7 @@ CREATE TABLE `virtual_users` (
 -- Final view structure for view `view_users`
 --
 
+/*!50001 DROP VIEW IF EXISTS `view_users`*/;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
