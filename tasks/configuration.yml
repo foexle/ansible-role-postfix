@@ -33,6 +33,7 @@
     backup=no
   notify:
     - restart postfix
+    - send test email
   tags:
     - common
     - postfix
@@ -48,7 +49,6 @@
   tags:
     - common
     - postfix
-
 
 
 - name: Configure root user email forwarding

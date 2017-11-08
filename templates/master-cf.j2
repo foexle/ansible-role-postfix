@@ -12,7 +12,7 @@
 # ==========================================================================
 smtp      inet  n       -       y       -       -       smtpd
 {% if postfix_smtpd_tls_enable is defined and postfix_smtpd_tls_enable %}
-smtps     inet  n       -       -       -       -       smtpd
+smtps     inet  n       -       y       -       -       smtpd
   -o smtpd_tls_wrappermode=yes
 {% endif %}
 pickup    unix  n       -       y       60      1       pickup
