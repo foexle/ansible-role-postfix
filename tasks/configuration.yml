@@ -25,18 +25,30 @@
     - postfix
 
 
-- name: Write Postfix configuration template
+- name: Write Postfix main configuration file
   template: >
     src=main-cf.j2
     dest="{{ postfix_config_dir }}/main.cf"
     mode=0644 owner=root group=root
-    backup=yes
+    backup=no
   notify:
     - restart postfix
-    - send test email
   tags:
     - common
     - postfix
+
+- name: Write Postfix master configuration file
+  template: >
+    src=master-cf.j2
+    dest="{{ postfix_config_dir }}/master.cf"
+    mode=0644 owner=root group=root
+    backup=no
+  notify:
+    - restart postfix
+  tags:
+    - common
+    - postfix
+
 
 
 - name: Configure root user email forwarding
