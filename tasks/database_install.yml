@@ -37,7 +37,7 @@
   template: >
     src=create_mailbox_user.py.j2
     dest="{{ postfix_config_dir }}/create_mailbox_user.py"
-    mode=0600 owner=root group=root
+    mode=0700 owner=root group=root
 
 
 - name: Copy database schema file to create tables and columns
