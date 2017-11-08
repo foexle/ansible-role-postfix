@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
+#  -*- coding: utf-8 -*-
 #
 # Python script to create mailbox login users with SSHA512 encryption
 # 
@@ -24,18 +24,18 @@ def get_connection():
                   user="{{ postfix_vuser_db_username }}",
                   passwd="{{ postfix_vuser_db_password }}",
                   db="{{ postfix_vuser_db_name }}")
-  
-def insert_user(username, password, domain):
+
+def insert_alias(destination, alias):
     conn= get_connection()
     cc = conn.cursor()
-
+    alias_domain = alias.split("@")[1]
+    alias_user = alias.split("@")[0]
     try:
-        print("Insert domain ...")
-        cc.execute("INSERT INTO virtual_domains VALUES (NULL,'{0}')".format(domain))
-        conn.commit()
-        domain_id = cc.lastrowid
-        print("Insert user/password ...")
-        cc.execute("INSERT INTO virtual_users VALUES (NULL,'{0}','{1}','{2}')".format(domain_id,username,password))
+        cc.execute("SELECT id FROM virtual_domains where name='{0}'".format(alias_domain))
+        domain_id = cc.fetchone()[0]
+        
+        print("Insert mail forward from {0} to {1}".format(alias, destination))
+        cc.execute("INSERT INTO virtual_aliases VALUES (NULL,'{0}','{1}','{2}')".format(domain_id, alias_user, destination))
         conn.commit()
     except client.Error as e:
         print("Unexpected error: ({0})", (e))
@@ -45,18 +45,14 @@ def insert_user(username, password, domain):
 
 def main():
     parser = OptionParser()
-    parser.add_option("-u", "--user", dest="username",
-                  help="This should contain the username")
-    parser.add_option("-d", "--domain", dest="domain",
-                  help="The appropriate domain")
-    parser.add_option("-p", "--password", dest="password",
-                  help="The used password")
-
+    parser.add_option("-d", "--destination", dest="destination",
+                  help="This should contain the destination mailbox")
+    parser.add_option("-a", "--alias", dest="alias",
+                  help="The alias mailbox which should farworded; Format: user@domain")
 
     (options, args) = parser.parse_args()
 
-    enc_password = encrypt_password(options.password)
-    insert_user(options.username, enc_password, options.domain)
+    insert_alias(options.destination, options.alias)
 
 
 

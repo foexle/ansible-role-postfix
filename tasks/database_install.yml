@@ -39,6 +39,11 @@
     dest="{{ postfix_config_dir }}/create_mailbox_user.py"
     mode=0700 owner=root group=root
 
+- name: Prepare simply python script to manage aliases
+  template: >
+    src=create_mail_forwarding.py.j2
+    dest="{{ postfix_config_dir }}/create_mail_forwarding.py"
+    mode=0700 owner=root group=root
 
 - name: Copy database schema file to create tables and columns
   copy: 
