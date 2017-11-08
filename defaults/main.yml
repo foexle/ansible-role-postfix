@@ -2,17 +2,17 @@
 # The variables file used for Postfix playbooks.
 # If not overriden in inventory or as a parameter, this is the value that will be used
 
-postfix_origin: '{{ ansible_hostname }}'
+postfix_origin: '{{ ansible_domain }}'
 postfix_master_cf_path: '{{ postfix_config_dir }}/master.cf'
 postfix_domain: ''
-postfix_notify_email: false
+postfix_notify_email: '{{ ansible_fqdn }}'
 postfix_relayhost: ''
 postfix_use_smtp: false
 postfix_relayhost_user: false
 postfix_relayhost_pass: false
 postfix_inet_interfaces: 'loopback-only'
 postfix_inet_protocols: 'all'
-postfix_smtp_address_preference: 'all'
+postfix_smtp_address_preference: 'any'
 postfix_message_size_limit: '158480000'
 
 postfix_smtpd_tls_enable: true
