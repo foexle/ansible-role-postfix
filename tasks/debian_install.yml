@@ -26,3 +26,7 @@
     - common
     - postfix
 
+- name: Install procmail package
+  apt: pkg="procmail" update_cache=yes state=latest
+  when: postfix_vuser_transport is defined and postfix_vuser_transport == 'procmail'
+
